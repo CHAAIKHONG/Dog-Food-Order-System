@@ -1,0 +1,7 @@
+NO   |Name
+1    |Dry Kibble
+2    |Wet Food
+3    |Raw Diets
+4    |Freeze-Dried Food
+5    |Dehydrated Food
+6    |Grain-Free Food

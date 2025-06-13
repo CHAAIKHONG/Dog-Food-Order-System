@@ -1,0 +1,24 @@
+id|name                            |price|category|quantity|description
+1|Pedigree Adult Dry Dog Food      |29.45|1    |40   |Balanced dry food for adult dogs.
+2|Probalance Beef Dog Food         |31.9 |1    |83   |Rich in beef protein for strength and immunity.
+3|IQ Dog Chicken Dog food          |31.5 |1    |84   |Tasty chicken formula, supports digestion.
+4|Back2Nature                      |200  |1    |95   |Natural and organic food for sensitive dogs.
+5|Royal Canin Pomeranian Adult     |20   |1    |78   |Tailored nutrition for Pomeranian adults.
+6|Monge Fresh Wet Food             |4.9  |2    |90   |Fresh ingredients in a flavorful wet meal.
+7|Pedigree Wet Pouch               |2.9  |2    |99   |Convenient wet food pouch, full of nutrients.
+8|Pedigree Dog Can Food            |2.9  |2    |98   |Juicy canned food with high palatability.
+9|Cesar Can Wet Dog Food           |1.9  |2    |99   |Gourmet wet food for small breed dogs.
+10|Probalance Selection Dog Food   |6.9  |2    |99   |Premium blend for complete nutrition.
+11|Raw Chicken Breast (100g)       |10   |3    |99   |Fresh raw chicken breast, high in protein.
+12|Raw Beef (100g)                 |15   |3    |99   |Quality raw beef, rich in iron and energy.
+13|Raw Duck Breast (100g)          |10.9 |3    |90   |Nutritious duck breast with unique flavor.
+14|Beef Offal (100g)               |15.9 |3    |90   |Mixed beef organs, full of vital nutrients.
+15|Chicken heart (100g)            |9.9  |3    |90   |Rich in iron, supports healthy development.
+16|Beef Bone                       |15.9 |3    |90   |Calcium-rich beef bone for dental health.
+17|Dog Chewing Toy                 |5.99 |4    |90   |Chew toy that helps clean teeth and prevent boredom.
+18|Dog Bell Bone                   |5.99 |4    |90   |Bone-shaped toy with bell to attract attention.
+19|Large Bone Toy                  |7.99 |4    |90   |Durable toy for medium to large dogs.
+20|Rubber Bouncy Bitting Ball      |3.99 |4    |90   |Bouncy rubber ball for interactive play.
+21|Soft Doll Toys                  |7.99 |4    |90   |Plush toy to comfort and entertain dogs.
+22|black dog king                  |100  |1    |90   |Premium dog food for large breeds, packed with nutrients.
+23 |New Product                    |10.00|1    |90   |This is the nre product of our shop
