@@ -70,21 +70,6 @@ struct User {
     string phone;
 };
 
-struct Admin {
-    int id;
-    char username[50];
-    char password[50];
-};
-
-struct Order {
-    int orderId;
-    int customerId;
-    int productId;
-    int quantity;
-    double totalPrice;
-    int status; // 0=pending, 1=completed
-};
-
 string trim(const string& str) {
     size_t first = str.find_first_not_of(' ');
     size_t last = str.find_last_not_of(' ');
@@ -184,10 +169,10 @@ class UserRegister {
                     this_thread::sleep_for(chrono::seconds(3));
                     system("cls");
                     return;
-                }
-                cout << "\nCONFIRM PASSWORD  : ";
                 i = 0;
                 while (true) {
+                }
+                cout << "\nCONFIRM PASSWORD  : ";
                     pw = getch();
                     if (pw == '\r') {
                         confirmPassword[i] = '\0';
@@ -344,11 +329,15 @@ class UserLogin {
 
         void staffPage(const string& username) {
             cout << "\nWelcome, " << username << "! This is the staff page." << endl;
-            pagetype = 2;
+            pagetype = 3;
             this_thread::sleep_for(chrono::seconds(2));
         }
 
     public:
+    	int getLoginUserID() {
+	        return loginuserid;
+	    }
+	    
         void login() {
             string username, inputPassword;
             int attempts = 3;
@@ -432,6 +421,9 @@ bool isUserAccount(const string& username, UserLogin& ul) {
 bool authenticateUser(const string& username, const string& password, UserLogin& ul) {
     if (ul.checkCredentials("register.txt", username, password)) {
         ul.customerPage(username);
+        return true;
+    } else if (ul.checkCredentials("manager.txt", username, password)) {
+        ul.managerPage(username);
         return true;
     } else if (ul.checkCredentials("staff.txt", username, password)) {
         ul.staffPage(username);
@@ -540,10 +532,10 @@ class ADTstackA {
 class Category {
     private:
         static const int HASH_SIZE = 100;
-        Category* categoryList = nullptr;
         Category* ChashTable[HASH_SIZE] = { nullptr };
 
     public:
+        Category* categoryList = nullptr;
         int id;
         string name;
         Category* mainNext;
@@ -620,11 +612,9 @@ class Product {
         static const int HASH_SIZE = 100;
         Product* productList = nullptr;
         Product* hashTable[HASH_SIZE] = { nullptr };
-//        ADTstackA<Product*> productStack;
         
     public:
-    	ADTstackA<Product*> productStack;
-    	
+        ADTstackA<Product*> productStack;
         int id;
         string name;
         int categoryId;
@@ -860,10 +850,10 @@ class Product {
 		
 				//if product id not found
 		        if (selected == nullptr) {
-		            cout << "❌ Product ID not found.\n";
+		            cout << "âŒ Product ID not found.\n";
 		        } 
 				else if (qty <= 0 || qty > selected->quantity) {
-		            cout << "❌ Invalid quantity. Available: " << selected->quantity << "\n";
+		            cout << "âŒ Invalid quantity. Available: " << selected->quantity << "\n";
 		        } 
 				else {
 					//read the line and add product into shopping cart
@@ -1072,7 +1062,6 @@ class Product {
 			cin >> productID;
 			
 		}
-		
 };
 
 class UserModule {
@@ -1080,6 +1069,10 @@ class UserModule {
         Product p;
         Category c;
     public:
+    	void setLoginUserID(int uid) {
+	        p.loginuserid = uid;
+	    }
+    
         void user_menu() {
             cout << string(28, '-') << endl;
             cout << setw(20) << "User Dashboard" << endl;
@@ -1141,73 +1134,6 @@ class UserModule {
         }
 };
 
-//class AdminModule(){
-//	private:
-//        Product p;
-//        Category c;
-//        
-//    public:
-//        void admin_menu() {
-//            cout << string(28, '-') << endl;
-//            cout << setw(20) << "User Dashboard" << endl;
-//            cout << string(28, '-') << endl;
-//            cout << "1. Manage Product" << endl;
-//            cout << "2. Manage Order" << endl;
-//            cout << "3. Report" << endl;
-//            cout << "4. Profile" << endl;
-//            cout << "0. Logout" << endl;
-//        }
-//        
-//        void user_main_page() {
-//            int choice;
-//            do {
-//                system("cls");
-//                user_menu();
-//                cout << "Please Select the option: ";
-//                cin >> choice;
-//                switch (choice) {
-//                    case 1: {
-//                    	//load catagory
-//					    c.clearCategory();
-//					    c.loadCategory();
-//					
-//					    int selectedCategory = c.displayCategoryAndChoose();
-//						
-//						//load product
-//					    p.clearProducts();
-//					    p.loadProducts();
-//					
-//					    if (selectedCategory == 0) {
-//					        p.displayProductsFromStack();
-//					    } else {
-//					        p.displayProductsByCategory(selectedCategory);
-//					    }
-//					    break;
-//					}
-//                        
-//                    case 2:
-//                    	p.displayShoppingCart();
-//                        break;
-//                    case 3: 
-//                        cout << "Order History feature not implemented yet." << endl;
-//                        this_thread::sleep_for(chrono::seconds(1));
-//                        break;
-//                    case 4: 
-//                        cout << "Profile feature not implemented yet." << endl;
-//                        this_thread::sleep_for(chrono::seconds(1));
-//                        break;
-//                    case 0: 
-//                        cout << "Logging out..." << endl;
-//                        this_thread::sleep_for(chrono::seconds(1));
-//                        break;
-//                    default: 
-//                        cout << "Invalid option!" << endl;
-//                        this_thread::sleep_for(chrono::seconds(1));
-//                }
-//            } while (choice != 0);
-//        }
-//}
-
 // Base class for admin operations
 
 // Derived class 1: Product Management
@@ -1236,14 +1162,14 @@ public:
             displayProductMenu();
             cout << "Enter your choice: ";
             cin >> choice;
-            cin.ignore();  // 清除输入缓冲区
+            cin.ignore();
             
             try {
                 switch(choice) {
                     case 1: addProduct(); break;
                     case 2: editProduct(); break;
                     case 3: deleteProduct(); break;
-//                    case 4: searchProduct(); break;
+                    case 4: searchProduct(); break;
                     case 0: cout << "Returning to main menu...\n"; break;
                     default: throw invalid_argument("Invalid choice!");
                 }
@@ -1305,10 +1231,8 @@ private:
         cout << "Description: ";
         getline(cin, newProduct.description);
         
-        // 生成ID
         newProduct.id = generateProductId();
         
-        // 添加到文件
         ofstream file("product.txt", ios::app);
         if(!file) throw runtime_error("Cannot open product file!");
         
@@ -1404,16 +1328,13 @@ private:
         cin.ignore();
         
         if(toupper(confirm) == 'Y') {
-            // 更新文件
             ifstream inFile("product.txt");
             ofstream outFile("temp_product.txt");
             string line;
             
-            // 复制标题行
             getline(inFile, line);
             outFile << line << endl;
             
-            // 处理每一行
             while(getline(inFile, line)) {
                 stringstream ss(line);
                 string token;
@@ -1621,26 +1542,556 @@ private:
 
 // OrderManagement 类
 class OrderManagement : public AdminOperation {
-	public:
-	    void execute() override {
-	        cout << "=== ORDER MANAGEMENT ===" << endl;
-	        cout << "This feature is under development." << endl;
-	        cout << "Press Enter to continue...";
-	        cin.ignore();
-	        cin.get();
-	    }
+private:
+    struct Order {
+        int id;
+        string date;
+        string username;
+        int items;
+        double total;
+        string status;
+    };
+
+    static const int MAX_ORDERS = 1000;
+    Order orders[MAX_ORDERS];
+    int orderCount = 0;
+
+    void loadOrders() {
+        ifstream file("order.txt");
+        string line;
+        
+        // Skip header
+        if (file) getline(file, line);
+        
+        orderCount = 0;
+        while (getline(file, line) && orderCount < MAX_ORDERS) {
+            stringstream ss(line);
+            string token;
+            
+            getline(ss, token, '|'); orders[orderCount].id = stoi(token);
+            getline(ss, orders[orderCount].date, '|');
+            getline(ss, orders[orderCount].username, '|');
+            getline(ss, token, '|'); orders[orderCount].items = stoi(token);
+            getline(ss, token, '|'); orders[orderCount].total = stod(token);
+            getline(ss, orders[orderCount].status, '|');
+            
+            orderCount++;
+        }
+        file.close();
+    }
+
+    void saveOrders() {
+        ofstream file("order.txt");
+        file << "ID|Date|Username|Items|Total|Status\n";
+        
+        for (int i = 0; i < orderCount; i++) {
+            file << orders[i].id << "|" << orders[i].date << "|" << orders[i].username << "|"
+                 << orders[i].items << "|" << fixed << setprecision(2) << orders[i].total << "|"
+                 << orders[i].status << "\n";
+        }
+        file.close();
+    }
+
+    void displayOrder(const Order& order) {
+        cout << "+----+------------+------------+-------+----------+------------+\n";
+        cout << "| ID | Date       | Username   | Items | Total    | Status     |\n";
+        cout << "+----+------------+------------+-------+----------+------------+\n";
+        cout << "| " << setw(2) << order.id << " | " << setw(10) << order.date 
+             << " | " << setw(10) << truncateString(order.username, 10)
+             << " | " << setw(5) << order.items 
+             << " | " << setw(8) << fixed << setprecision(2) << order.total
+             << " | " << setw(10) << truncateString(order.status, 10) << " |\n";
+        cout << "+----+------------+------------+-------+----------+------------+\n";
+    }
+
+    void displayAllOrders() {
+        if (orderCount == 0) {
+            cout << "No orders found.\n";
+            return;
+        }
+
+        cout << "+----+------------+------------+-------+----------+------------+\n";
+        cout << "| ID | Date       | Username   | Items | Total    | Status     |\n";
+        cout << "+----+------------+------------+-------+----------+------------+\n";
+
+        for (int i = 0; i < orderCount; i++) {
+            cout << "| " << setw(2) << orders[i].id << " | " << setw(10) << orders[i].date 
+                 << " | " << setw(10) << truncateString(orders[i].username, 10)
+                 << " | " << setw(5) << orders[i].items 
+                 << " | " << setw(8) << fixed << setprecision(2) << orders[i].total
+                 << " | " << setw(10) << truncateString(orders[i].status, 10) << " |\n";
+        }
+        cout << "+----+------------+------------+-------+----------+------------+\n";
+    }
+
+    void updateOrderStatus() {
+        loadOrders();
+        displayAllOrders();
+
+        cout << "\nEnter Order ID to update (0 to cancel): ";
+        int orderId;
+        if (!(cin >> orderId) || orderId == 0) {
+            cin.clear();
+            cin.ignore();
+            return;
+        }
+
+        bool found = false;
+        for (int i = 0; i < orderCount; i++) {
+            if (orders[i].id == orderId) {
+                cout << "\nCurrent Status: " << orders[i].status << endl;
+                cout << "Available statuses: Pending, Processing, Shipped, Delivered, Cancelled\n";
+                cout << "Enter new status: ";
+                
+                string newStatus;
+                cin.ignore();
+                getline(cin, newStatus);
+
+                orders[i].status = newStatus;
+                saveOrders();
+                cout << "Order status updated successfully.\n";
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            cout << "Order not found.\n";
+        }
+    }
+
+    void searchOrders() {
+        loadOrders();
+        if (orderCount == 0) {
+            cout << "No orders available to search.\n";
+            return;
+        }
+
+        cout << "\nSearch Orders By:\n";
+        cout << "1. Order ID\n";
+        cout << "2. Username\n";
+        cout << "3. Date\n";
+        cout << "4. Status\n";
+        cout << "0. Cancel\n";
+        cout << "Choice: ";
+
+        int choice;
+        if (!(cin >> choice)) {
+            cin.clear();
+            cin.ignore();
+            cout << "Invalid input.\n";
+            return;
+        }
+
+        Order results[MAX_ORDERS];
+        int resultCount = 0;
+        cin.ignore();
+
+        switch (choice) {
+            case 1: {
+                cout << "Enter Order ID: ";
+                int id;
+                if (cin >> id) {
+                    for (int i = 0; i < orderCount; i++) {
+                        if (orders[i].id == id) {
+                            results[resultCount++] = orders[i];
+                        }
+                    }
+                }
+                break;
+            }
+            case 2: {
+                cout << "Enter Username: ";
+                string username;
+                getline(cin, username);
+                transform(username.begin(), username.end(), username.begin(), ::tolower);
+                
+                for (int i = 0; i < orderCount; i++) {
+                    string lower = orders[i].username;
+                    transform(lower.begin(), lower.end(), lower.begin(), ::tolower);
+                    if (lower.find(username) != string::npos) {
+                        results[resultCount++] = orders[i];
+                    }
+                }
+                break;
+            }
+            case 3: {
+                cout << "Enter Date (YYYY-MM-DD): ";
+                string date;
+                getline(cin, date);
+                
+                for (int i = 0; i < orderCount; i++) {
+                    if (orders[i].date.find(date) != string::npos) {
+                        results[resultCount++] = orders[i];
+                    }
+                }
+                break;
+            }
+            case 4: {
+                cout << "Enter Status: ";
+                string status;
+                getline(cin, status);
+                transform(status.begin(), status.end(), status.begin(), ::tolower);
+                
+                for (int i = 0; i < orderCount; i++) {
+                    string lower = orders[i].status;
+                    transform(lower.begin(), lower.end(), lower.begin(), ::tolower);
+                    if (lower.find(status) != string::npos) {
+                        results[resultCount++] = orders[i];
+                    }
+                }
+                break;
+            }
+            case 0:
+                return;
+            default:
+                cout << "Invalid choice.\n";
+                return;
+        }
+
+        cout << "\nSearch Results (" << resultCount << " found):\n";
+        if (resultCount == 0) {
+            cout << "No orders found matching your criteria.\n";
+        } else {
+            cout << "+----+------------+------------+-------+----------+------------+\n";
+            cout << "| ID | Date       | Username   | Items | Total    | Status     |\n";
+            cout << "+----+------------+------------+-------+----------+------------+\n";
+
+            for (int i = 0; i < resultCount; i++) {
+                cout << "| " << setw(2) << results[i].id << " | " << setw(10) << results[i].date 
+                     << " | " << setw(10) << truncateString(results[i].username, 10)
+                     << " | " << setw(5) << results[i].items 
+                     << " | " << setw(8) << fixed << setprecision(2) << results[i].total
+                     << " | " << setw(10) << truncateString(results[i].status, 10) << " |\n";
+            }
+            cout << "+----+------------+------------+-------+----------+------------+\n";
+        }
+    }
+
+    string truncateString(const string& str, size_t width) {
+        if (str.length() <= width) return str;
+        return str.substr(0, width - 3) + "...";
+    }
+
+public:
+    void execute() override {
+        int choice;
+        do {
+            system("cls");
+            cout << "====================================\n";
+            cout << "||        ORDER MANAGEMENT        ||\n";
+            cout << "====================================\n";
+            cout << "1. View All Orders\n";
+            cout << "2. Update Order Status\n";
+            cout << "3. Search Orders\n";
+            cout << "0. Back to Main Menu\n";
+            cout << "====================================\n";
+            cout << "Choice: ";
+            
+            if (!(cin >> choice)) {
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                cout << "Invalid input. Please try again.\n";
+                this_thread::sleep_for(chrono::seconds(1));
+                continue;
+            }
+
+            switch (choice) {
+                case 1:
+                    loadOrders();
+                    displayAllOrders();
+                    cout << "Press Enter to continue...";
+                    cin.ignore();
+                    cin.get();
+                    break;
+                case 2:
+                    updateOrderStatus();
+                    cout << "Press Enter to continue...";
+                    cin.ignore();
+                    cin.get();
+                    break;
+                case 3:
+                    searchOrders();
+                    cout << "Press Enter to continue...";
+                    cin.ignore();
+                    cin.get();
+                    break;
+                case 0:
+                    cout << "Returning to main menu...\n";
+                    break;
+                default:
+                    cout << "Invalid choice. Please try again.\n";
+                    this_thread::sleep_for(chrono::seconds(1));
+            }
+        } while (choice != 0);
+    }
 };
+
 
 // ReportGeneration 类
 class ReportGeneration : public AdminOperation {
-	public:
-	    void execute() override {
-	        cout << "=== REPORT GENERATION ===" << endl;
-	        cout << "This feature is under development." << endl;
-	        cout << "Press Enter to continue...";
-	        cin.ignore();
-	        cin.get();
-	    }
+private:
+    struct SalesData {
+        string date;
+        double totalSales;
+        int orderCount;
+    };
+
+    static const int MAX_RECORDS = 1000;
+    
+    Product* product;
+    Category* category;
+
+public:
+    ReportGeneration(Product* p = nullptr, Category* c = nullptr) : product(p), category(c) {}
+
+    void execute() override {
+        int choice;
+        do {
+            system("cls");
+            cout << "====================================\n";
+            cout << "||        REPORT GENERATION        ||\n";
+            cout << "====================================\n";
+            cout << "1. Sales Report\n";
+            cout << "2. Product Report\n";
+            cout << "3. Customer Order Report\n";
+            cout << "0. Back to Main Menu\n";
+            cout << "====================================\n";
+            cout << "Choice: ";
+            
+            cin >> choice;
+            cin.ignore();
+
+            switch(choice) {
+                case 1: generateSalesReport(); break;
+                case 2: generateProductReport(); break;
+                case 3: generateCustomerReport(); break;
+                case 0: cout << "Returning to main menu...\n"; break;
+                default: cout << "Invalid choice!\n";
+            }
+            
+            if (choice != 0) {
+                cout << "\nPress Enter to continue...";
+                cin.get();
+            }
+        } while(choice != 0);
+    }
+
+private:
+    void generateSalesReport() {
+        system("cls");
+        cout << "=== SALES REPORT ===\n";
+        
+        // Load order data
+        ifstream orderFile("order.txt");
+        if (!orderFile) {
+            cout << "No order data available.\n";
+            return;
+        }
+
+        // Skip header
+        string line;
+        getline(orderFile, line);
+
+        SalesData dailySales[MAX_RECORDS];
+        int recordCount = 0;
+        double grandTotal = 0;
+        int totalOrders = 0;
+
+        // Process each order
+        while (getline(orderFile, line) && recordCount < MAX_RECORDS) {
+            stringstream ss(line);
+            string token;
+            string date;
+            double total;
+            
+            getline(ss, token, '|'); // ID
+            getline(ss, date, '|');  // Date
+            getline(ss, token, '|'); // Username
+            getline(ss, token, '|'); // Items
+            getline(ss, token, '|'); // Total
+            total = stod(token);
+            getline(ss, token, '|'); // Status
+
+            // Find or create entry for this date
+            bool found = false;
+            for (int i = 0; i < recordCount; i++) {
+                if (dailySales[i].date == date) {
+                    dailySales[i].totalSales += total;
+                    dailySales[i].orderCount++;
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                dailySales[recordCount].date = date;
+                dailySales[recordCount].totalSales = total;
+                dailySales[recordCount].orderCount = 1;
+                recordCount++;
+            }
+
+            grandTotal += total;
+            totalOrders++;
+        }
+        orderFile.close();
+
+        // Display report
+        cout << "+------------+--------------+-------------+\n";
+        cout << "| Date       | Total Sales  | # of Orders |\n";
+        cout << "+------------+--------------+-------------+\n";
+        
+        for (int i = 0; i < recordCount; i++) {
+            cout << "| " << setw(10) << dailySales[i].date << " | RM" 
+                 << setw(10) << fixed << setprecision(2) << dailySales[i].totalSales 
+                 << " | " << setw(11) << dailySales[i].orderCount << " |\n";
+        }
+        
+        cout << "+------------+--------------+-------------+\n";
+        cout << "| Grand Total: RM" << setw(10) << grandTotal 
+             << " | Orders: " << setw(5) << totalOrders << " |\n";
+        cout << "+-----------------------------------------+\n";
+    }
+
+    void generateProductReport() {
+        system("cls");
+        cout << "=== PRODUCT REPORT ===\n";
+        
+        if (!product || !category) {
+            cout << "Product or category data not available.\n";
+            return;
+        }
+
+        // Load products and categories
+        product->loadProducts();
+        category->loadCategory();
+
+        // Get category sales
+        map<int, double> categorySales;
+        map<int, int> categoryCount;
+
+        // Process order file to get product sales
+        ifstream orderFile("order.txt");
+        if (!orderFile) {
+            cout << "No order data available.\n";
+            return;
+        }
+
+        // Skip header
+        string line;
+        getline(orderFile, line);
+
+        while (getline(orderFile, line)) {
+            stringstream ss(line);
+            string token;
+            
+            getline(ss, token, '|'); // ID
+            getline(ss, token, '|'); // Date
+            getline(ss, token, '|'); // Username
+            getline(ss, token, '|'); // Items
+            int items = stoi(token);
+            getline(ss, token, '|'); // Total
+            double total = stod(token);
+            getline(ss, token, '|'); // Status
+
+            // For simplicity, we'll assume each order is for one product
+            // In a real system, you'd need to track individual products in orders
+            double avgPrice = total / items;
+            
+            // Find products with similar price (simplified approach)
+            product->productStack.Functraverse([&](Product* p) {
+                if (abs(p->price - avgPrice) < 0.01) {
+                    categorySales[p->categoryId] += total;
+                    categoryCount[p->categoryId]++;
+                }
+            });
+        }
+        orderFile.close();
+
+        // Display category sales
+        cout << "\n=== CATEGORY SALES ===\n";
+        cout << "+----+-----------------------------------------+-------------+--------------+\n";
+        cout << "| ID | Category Name                           | # of Sales  | Total Sales  |\n";
+        cout << "+----+-----------------------------------------+-------------+--------------+\n";
+
+        Category* currentCat = category->categoryList;
+        while (currentCat) {
+            cout << "| " << setw(2) << currentCat->id << " | " 
+                 << setw(39) << currentCat->name << " | " 
+                 << setw(11) << categoryCount[currentCat->id] << " | RM" 
+                 << setw(11) << fixed << setprecision(2) << categorySales[currentCat->id] << " |\n";
+            currentCat = currentCat->mainNext;
+        }
+        cout << "+----+-----------------------------------------+-------------+--------------+\n";
+    }
+
+    void generateCustomerReport() {
+        system("cls");
+        cout << "=== CUSTOMER ORDER REPORT ===\n";
+        
+        // Load customer and order data
+        ifstream orderFile("order.txt");
+        ifstream customerFile("register.txt");
+        
+        if (!orderFile || !customerFile) {
+            cout << "Data files not available.\n";
+            return;
+        }
+
+        // Skip headers
+        string line;
+        getline(orderFile, line);
+        getline(customerFile, line);
+
+        map<string, pair<int, double>> customerStats; // username -> (order count, total spent)
+
+        // Process orders
+        while (getline(orderFile, line)) {
+            stringstream ss(line);
+            string token, username;
+            double total;
+            
+            getline(ss, token, '|'); // ID
+            getline(ss, token, '|'); // Date
+            getline(ss, username, '|'); // Username
+            getline(ss, token, '|'); // Items
+            getline(ss, token, '|'); // Total
+            total = stod(token);
+            getline(ss, token, '|'); // Status
+
+            customerStats[username].first++;
+            customerStats[username].second += total;
+        }
+        orderFile.close();
+
+        // Display report
+        cout << "+---------------------+-------------+--------------+\n";
+        cout << "| Customer            | # of Orders | Total Spent  |\n";
+        cout << "+---------------------+-------------+--------------+\n";
+
+        // Process customer file to get names
+        while (getline(customerFile, line)) {
+            stringstream ss(line);
+            string token, username, name;
+            
+            getline(ss, token, '|'); // ID
+            getline(ss, name, '|');  // Name
+            getline(ss, username, '|'); // Username
+            getline(ss, token, '|'); // Password
+            getline(ss, token, '|'); // Address
+            getline(ss, token, '|'); // Email
+            getline(ss, token);      // Phone
+
+            if (customerStats.find(username) != customerStats.end()) {
+                cout << "| " << setw(19) << name << " | " 
+                     << setw(11) << customerStats[username].first << " | RM" 
+                     << setw(11) << fixed << setprecision(2) << customerStats[username].second << " |\n";
+            }
+        }
+        customerFile.close();
+
+        cout << "+---------------------+-------------+--------------+\n";
+    }
 };
 
 class AdminModule {
@@ -1756,8 +2207,9 @@ int main() {
             // After successful login
             if (l.getpagetype() == 1) { // Customer
                 UserModule um;
+                um.setLoginUserID(l.getLoginUserID());// check the user id
                 um.user_main_page();
-            }else if(l.getpagetype() == 2){
+            }else if(l.getpagetype() == 3){
             	AdminModule am;
                 am.admin_main_page();
 			}
