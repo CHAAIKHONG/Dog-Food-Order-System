@@ -326,6 +326,13 @@ class UserLogin {
             this_thread::sleep_for(chrono::seconds(2));
         }
 
+		void managerPage(const string& username)
+		{
+	        cout << "\nWelcome, " << username << "! This is the manager page." << endl;
+	        pagetype = 2;
+	        this_thread::sleep_for(chrono::seconds(2));
+	    }
+
     public:
     	int getLoginUserID() {
 	        return loginuserid;
@@ -391,11 +398,13 @@ class UserLogin {
         	return pagetype;
 		}
 		
-		void viewProfile(int userId, string type) {
+		void viewProfile(int userId, int type) {
 			string filename;
 			
-			if(type == "admin"){
+			if(type == 3){
 	    		filename = "staff.txt";
+			}else if(type == 2){
+				filename = "manager.txt";
 			}
 			else{
 				filename = "register.txt";
@@ -420,7 +429,7 @@ class UserLogin {
 	                string storedId = trim(fields[0]);
 	                if (stoi(storedId) == userId) {
 	                    found = true;
-	                    displayProfileInfo(fields);
+	                    displayProfileInfo(fields, type);
 	                    break;
 	                }
 	            }
@@ -433,10 +442,12 @@ class UserLogin {
 	        }
 	    }
 	
-	    void editProfile(int userId, string type) {
+	    void editProfile(int userId, int type) {
 	    	string filename;
-			if(type == "admin"){
+			if(type == 3){
 	    		filename = "staff.txt";
+			}else if(type == 2){
+				filename = "manager.txt";
 			}
 			else{
 				filename = "register.txt";
@@ -462,7 +473,7 @@ class UserLogin {
 	                if (stoi(storedId) == userId) {
 	                    found = true;
 	                    updatedUser = getUserFromFields(fields);
-	                    displayEditMenu(updatedUser);
+	                    displayEditMenu(updatedUser, type);
 	                    
 	                    // Write updated user to temp file
 	                    outFile << updatedUser.id << "|" << updatedUser.username << "|" 
@@ -490,25 +501,29 @@ class UserLogin {
 	        }
 	    }
 	
-	    void displayProfileInfo(const string fields[]) {
+	    void displayProfileInfo(const string fields[], int type) {
 	        cout << "\n=== PROFILE INFORMATION ===" << endl;
 	        cout << "User ID: " << trim(fields[0]) << endl;
 	        cout << "Username: " << trim(fields[1]) << endl;
-	        cout << "Address: " << trim(fields[3]) << endl;
+			if(type == 1){
+	        	cout << "Address: " << trim(fields[3]) << endl;
+			}
 	        cout << "Email: " << trim(fields[4]) << endl;
 	        cout << "Phone: " << trim(fields[5]) << endl;
 	        cout << "===========================" << endl;
 	    }
 	
-	    void displayEditMenu(User& user) {
+	    void displayEditMenu(User& user, int type) {
 	        int choice;
 	        do {
 	            system("cls");
 	            cout << "\n=== EDIT PROFILE ===" << endl;
 	            cout << "1. Change Password" << endl;
-	            cout << "2. Update Address" << endl;
-	            cout << "3. Update Email" << endl;
-	            cout << "4. Update Phone" << endl;
+	            cout << "2. Update Email" << endl;
+	            cout << "3. Update Phone" << endl;
+				if(type == 1){
+	            	cout << "4. Update Address" << endl;
+				}
 	            cout << "0. Back to Profile" << endl;
 	            cout << "Choice: ";
 	            cin >> choice;
@@ -516,9 +531,9 @@ class UserLogin {
 	            
 	            switch(choice) {
 	                case 1: changePassword(user); break;
-	                case 2: updateField(user.address, "Enter new address: "); break;
-	                case 3: updateEmail(user.email); break;
-	                case 4: updatePhone(user.phone); break;
+	                case 2: updateEmail(user.email); break;
+	                case 3: updatePhone(user.phone); break;
+	                case 4: updateField(user.address, "Enter new address: "); break;
 	                case 0: break;
 	                default: cout << "Invalid choice!" << endl;
 	            }
@@ -666,6 +681,9 @@ bool authenticateUser(const string& username, const string& password, UserLogin&
         return true;
     } else if (ul.checkCredentials("staff.txt", username, password)) {
         ul.staffPage(username);
+        return true;
+    }else if (ul.checkCredentials("manager.txt", username, password)) {
+        ul.managerPage(username);
         return true;
     }
     return false;
@@ -1141,7 +1159,7 @@ class Product {
 	    }
 	
 	    if (!selected) {
-	        cout << "ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚ÂÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¦ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ Product ID not found.\n";
+	        cout << "ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚ÂÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¦ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¾ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ Product ID not found.\n";
 	        return;
 	    }
 	
@@ -1971,7 +1989,7 @@ class UserModule {
             cout << "0. Logout" << endl;
         }
         
-        void user_main_page() {
+        void user_main_page(int type) {
             int choice;
             do {
                 system("cls");
@@ -2009,7 +2027,7 @@ class UserModule {
                         p.displayOrderHistory();
                         break;
                     case 4: 
-                        profileMenu();
+                        profileMenu(type);
                         break;
                     case 0: 
                         cout << "Logging out..." << endl;
@@ -2022,7 +2040,7 @@ class UserModule {
             } while (choice != 0);
         }
         
-        void profileMenu() {
+        void profileMenu(int type) {
 	        int choice;
 	        do {
 	            system("cls");
@@ -2036,12 +2054,12 @@ class UserModule {
 	            
 	            switch(choice) {
 	                case 1:
-	                    ul.viewProfile(userId, "user");
+	                    ul.viewProfile(userId, type);
 	                    cout << "\nPress Enter to continue...";
 	                    cin.get();
 	                    break;
 	                case 2:
-	                    ul.editProfile(userId, "user");
+	                    ul.editProfile(userId, type);
 	                    break;
 	                case 0:
 	                    break;
@@ -3299,7 +3317,7 @@ class AdminModule {
 	    UserLogin ul;
 	    
 	public:
-	    void admin_menu() {
+	    void admin_menu(int admintype) {
 	        cout << string(28, '-') << endl;
 	        cout << setw(20) << "Admin Dashboard" << endl;
 	        cout << string(28, '-') << endl;
@@ -3307,14 +3325,17 @@ class AdminModule {
 	        cout << "2. Manage Order" << endl;
 	        cout << "3. Report" << endl;
 	        cout << "4. Profile" << endl;
+			if(admintype == 2){
+				cout << "5. Manage Staff" << endl;
+			}
 	        cout << "0. Logout" << endl;
 	    }
 	
-	    void admin_main_page(int userId) {
+	    void admin_main_page(int userId, int admintype) {
 	        int choice;
 	        do {
 	            system("cls");
-	            admin_menu();
+	            admin_menu(admintype);
 	            cout << "Please Select the option: ";
 	            cin >> choice;
 	            
@@ -3338,7 +3359,11 @@ class AdminModule {
 	                        delete operation;
 	                        break;
 	                    case 4: 
-	                        profileMenu(userId);
+	                        profileMenu(userId, admintype);
+	                        this_thread::sleep_for(chrono::seconds(1));
+	                        break;
+						case 5: 
+	                        staffmanage();
 	                        this_thread::sleep_for(chrono::seconds(1));
 	                        break;
 	                    case 0: 
@@ -3357,7 +3382,7 @@ class AdminModule {
 	        } while(choice != 0);
 	    }
 	    
-	    void profileMenu(int userId) {
+	    void profileMenu(int userId, int admintype) {
 	        int choice;
 	        do {
 	            system("cls");
@@ -3371,12 +3396,12 @@ class AdminModule {
 	            
 	            switch(choice) {
 	                case 1:
-	                    ul.viewProfile(userId, "admin");
+	                    ul.viewProfile(userId, admintype);
 	                    cout << "\nPress Enter to continue...";
 	                    cin.get();
 	                    break;
 	                case 2:
-	                    ul.editProfile(userId, "admin");
+	                    ul.editProfile(userId, admintype);
 	                    break;
 	                case 0:
 	                    break;
@@ -3386,6 +3411,206 @@ class AdminModule {
 	            }
 	        } while(choice != 0);
 	    }
+
+		void staffmanage() {
+	        int choice;
+	        do {
+	            system("cls");
+	            cout << "=== PROFILE MENU ===" << endl;
+	            cout << "1. View Staff" << endl;
+	            cout << "2. Add Profile" << endl;
+	            cout << "3. Delete Profile" << endl;
+	            cout << "0. Back" << endl;
+	            cout << "Choice: ";
+	            cin >> choice;
+	            cin.ignore();
+	            
+	            switch(choice) {
+	                case 1:
+	                    viewAllStaff();
+	                    break;
+	                case 2:
+	                    addNewStaff();
+	                    break;
+					case 3:
+						deleteStaff();
+						break;
+	                case 0:
+	                    break;
+	                default:
+	                    cout << "Invalid choice!" << endl;
+	                    this_thread::sleep_for(chrono::seconds(1));
+	            }
+	        } while(choice != 0);
+	    }
+
+		void viewAllStaff() {
+			system("cls");
+			ifstream file("staff.txt");
+			if (!file) {
+				cout << "No staff records found!" << endl;
+				cout << "Press Enter to continue...";
+				cin.get();
+				return;
+			}
+
+			cout << "=== STAFF LIST ===" << endl;
+			cout << "+----+------------------+---------------------+----------------+" << endl;
+			cout << "| ID | Username         | Email               | Phone          |" << endl;
+			cout << "+----+------------------+---------------------+----------------+" << endl;
+
+			string line;
+			getline(file, line); // Skip header
+			while (getline(file, line)) {
+				string fields[6];
+				int numFields = split(line, "|", fields, 6);
+				if (numFields >= 6) {
+					cout << "| " << setw(2) << trim(fields[0]) << " | " 
+						<< setw(16) << truncateString(trim(fields[1]), 16) << " | "
+						<< setw(19) << truncateString(trim(fields[4]), 19) << " | "
+						<< setw(14) << truncateString(trim(fields[5]), 14) << " |" << endl;
+				}
+			}
+			file.close();
+
+			cout << "+----+------------------+---------------------+----------------+" << endl;
+			cout << "Press Enter to continue...";
+			cin.get();
+		}
+
+		void addNewStaff() {
+			system("cls");
+			cout << "=== ADD NEW STAFF ===" << endl;
+			
+			string username, password, confirmPassword, email, phone;
+			
+			cout << "Username: ";
+			getline(cin, username);
+			
+			cout << "Password: ";
+			char ch;
+			char pw[30];
+			int i = 0;
+			while ((ch = getch()) != '\r') {
+				if (ch == '\b' && i > 0) {
+					--i;
+					cout << "\b \b";
+				} else if (i < 29 && ch != '\r') {
+					pw[i++] = ch;
+					cout << '*';
+				}
+			}
+			pw[i] = '\0';
+			password = pw;
+			
+			cout << "\nConfirm Password: ";
+			i = 0;
+			while ((ch = getch()) != '\r') {
+				if (ch == '\b' && i > 0) {
+					--i;
+					cout << "\b \b";
+				} else if (i < 29 && ch != '\r') {
+					pw[i++] = ch;
+					cout << '*';
+				}
+			}
+			pw[i] = '\0';
+			confirmPassword = pw;
+			
+			if (password != confirmPassword) {
+				cout << "\nPasswords do not match!" << endl;
+				this_thread::sleep_for(chrono::seconds(1));
+				return;
+			}
+			
+			cout << "\nEmail: ";
+			getline(cin, email);
+			
+			cout << "Phone (+60): ";
+			getline(cin, phone);
+			
+			// Generate new staff ID
+			int newId = 1;
+			ifstream inFile("staff.txt");
+			string lastLine;
+			while (getline(inFile, lastLine)) {
+				if (!lastLine.empty() && lastLine.find("id") == string::npos) {
+					stringstream ss(lastLine);
+					string token;
+					getline(ss, token, '|');
+					try {
+						newId = stoi(token) + 1;
+					} catch (...) {
+						newId = 1;
+					}
+				}
+			}
+			inFile.close();
+			
+			// Save to file
+			ofstream outFile("staff.txt", ios::app);
+			if (!outFile) {
+				cout << "Error: Cannot open staff file!" << endl;
+				return;
+			}
+			
+			if (newId == 1) {
+				outFile << "id|username|password|address|email|phone\n";
+			}
+			
+			outFile << newId << "|" << username << "|" << password << "||" << email << "|" << phone << endl;
+			outFile.close();
+			
+			cout << "\nStaff added successfully with ID: " << newId << endl;
+			this_thread::sleep_for(chrono::seconds(1));
+		}
+
+		void deleteStaff() {
+			viewAllStaff();
+			
+			cout << "\nEnter Staff ID to delete (0 to cancel): ";
+			int staffId;
+			cin >> staffId;
+			cin.ignore();
+			
+			if (staffId == 0) return;
+			
+			ifstream inFile("staff.txt");
+			ofstream tempFile("temp_staff.txt");
+			string line;
+			bool found = false;
+			
+			getline(inFile, line); // Skip header
+			tempFile << line << endl;
+			
+			while (getline(inFile, line)) {
+				stringstream ss(line);
+				string token;
+				getline(ss, token, '|');
+				int currentId = stoi(token);
+				
+				if (currentId != staffId) {
+					tempFile << line << endl;
+				} else {
+					found = true;
+				}
+			}
+			
+			inFile.close();
+			tempFile.close();
+			
+			if (found) {
+				remove("staff.txt");
+				rename("temp_staff.txt", "staff.txt");
+				cout << "Staff deleted successfully!" << endl;
+			} else {
+				remove("temp_staff.txt");
+				cout << "Staff ID not found!" << endl;
+			}
+			
+			this_thread::sleep_for(chrono::seconds(1));
+		}
+
 };
 
 // Friend function implementations
@@ -3419,10 +3644,10 @@ int main() {
             if (l.getpagetype() == 1) { // Customer
                 UserModule um;
                 um.setLoginUserID(l.getLoginUserID());// check the user id
-                um.user_main_page();
-            }else if(l.getpagetype() == 3){
+                um.user_main_page(l.getpagetype());
+            }else if(l.getpagetype() == 3 || l.getpagetype() == 2){
             	AdminModule am;
-                am.admin_main_page(l.getLoginUserID());
+                am.admin_main_page(l.getLoginUserID(), l.getpagetype());
 			}
             // Add other user types here if needed
         }

@@ -1,2 +1,3 @@
-id   |username                   |password               |address                                                     |email                         |phone number
-1|wonderland staff account|wonderlandstaff1234|10, taman ixora, 75400, melaka|wonderlandstaff@gmail.com|+601192842773
+id   |username                   |password               ||email                         |phone number
+1|wonderland staff account|wonderlandstaff1234||wonderlandstaff@gmail.com|+601192842773
+2|wonderland staff aikhong|wonderlandstaffaikhong1234||aikhong@gmail.com|+6001139859858

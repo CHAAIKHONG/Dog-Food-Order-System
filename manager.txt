@@ -1,0 +1,2 @@
+id   |username                   |password               |address                                                     |email                         |phone number
+1|wonderland manager account|wonderlandmanager1234|10, taman ixora, 75400, melaka|wonderlandmanager@gmail.com|+601192842773
