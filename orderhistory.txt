@@ -1,0 +1,10 @@
+Order ID|User ID|Product ID|Quantity|Total Price|Order Date|Status
+1|1|4|1|200.00|2025-06-17|Completed
+1|1|16|10|159.00|2025-06-17|Completed
+2|1|4|1|200.00|2025-06-17|Completed
+3|1|1|10|294.50|2025-06-18|Completed
+3|1|4|1|200.00|2025-06-18|Completed
+4|1|1|1|29.45|2025-06-18|Delivery
+4|1|14|1|15.90|2025-06-18|Delivery
+5|10|1|10|294.50|2025-06-18|Preparing
+6|10|1|1|29.45|2025-06-18|Delivery
