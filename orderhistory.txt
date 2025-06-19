@@ -8,3 +8,4 @@ Order ID|User ID|Product ID|Quantity|Total Price|Order Date|Status
 4|1|14|1|15.90|2025-06-18|Delivery
 5|10|1|10|294.50|2025-06-18|Preparing
 6|10|1|1|29.45|2025-06-18|Delivery
+7|2|1|1|29.45|2025-06-19|Preparing

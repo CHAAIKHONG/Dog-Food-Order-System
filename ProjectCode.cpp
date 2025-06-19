@@ -105,10 +105,14 @@ class UserRegister {
         char* confirmPassword;
         char pw;
         int phoneNumber;
-        int i = 0;
-        int attemptCount = 0;
+        int i;
+        int attemptCount;
     
     public:
+		UserRegister(){
+			attemptCount = 0;
+			i=0;
+		}
         void userRegister() {
             password = new char[21];
             confirmPassword = new char[21];
@@ -168,10 +172,10 @@ class UserRegister {
                     this_thread::sleep_for(chrono::seconds(3));
                     system("cls");
                     return;
+				}
                 i = 0;
+				cout << "\nCONFIRM PASSWORD  : ";
                 while (true) {
-                }
-                cout << "\nCONFIRM PASSWORD  : ";
                     pw = getch();
                     if (pw == '\r') {
                         confirmPassword[i] = '\0';
@@ -503,7 +507,7 @@ class UserLogin {
 	
 	    void displayProfileInfo(const string fields[], int type) {
 	        cout << "\n=== PROFILE INFORMATION ===" << endl;
-	        cout << "User ID: " << trim(fields[0]) << endl;
+	        // cout << "User ID: " << trim(fields[0]) << endl;
 	        cout << "Username: " << trim(fields[1]) << endl;
 			if(type == 1){
 	        	cout << "Address: " << trim(fields[3]) << endl;
@@ -549,7 +553,8 @@ class UserLogin {
 	        getPasswordInput(currentPassword, 50);
 	        
 	        if (strcmp(currentPassword, user.password.c_str()) != 0) {
-	            cout << "Incorrect current password!" << endl;
+	            cout << "Incorrect current password! Press Enter to continue." << endl;
+				cin.get();
 	            return;
 	        }
 	        
@@ -560,12 +565,15 @@ class UserLogin {
 	        getPasswordInput(confirmPassword, 50);
 	        
 	        if (strcmp(newPassword, confirmPassword) != 0) {
-	            cout << "Passwords don't match!" << endl;
+	            cout << "Passwords don't match! Press Enter to continue." << endl;
+				cin.get();
 	            return;
 	        }
 	        
 	        user.password = newPassword;
 	        cout << "Password changed successfully!" << endl;
+			cout << "Press Enter to continue." << endl;
+			cin.get();
 	    }
 	
 	    void updateEmail(string& email) {
@@ -585,9 +593,11 @@ class UserLogin {
 	        
 	        if (valid) {
 	            email = newEmail;
-	            cout << "Email updated successfully!" << endl;
+	            cout << "Email updated successfully! Press Enter to continue." << endl;
+				cin.get();
 	        } else {
-	            cout << "Invalid email format! Must contain '@'" << endl;
+	            cout << "Invalid email format! Must contain '@'! Press Enter to continue." << endl;
+				cin.get();
 	        }
 	    }
 	
@@ -608,12 +618,14 @@ class UserLogin {
 	        
 	        if (valid && newPhone.length() >= 9 && newPhone.length() <= 11) {
 	            phone = "+60" + newPhone;
-	            cout << "Phone updated successfully!" << endl;
+	            cout << "Phone updated successfully! Press Enter to continue." << endl;
+				cin.get();
 	        } else {
-	            cout << "Invalid phone number! Must be 9-11 digits after +60" << endl;
+	            cout << "Invalid phone number! Must be 9-11 digits after +60. Press Enter to continue." << endl;
+				cin.get();
 	        }
 	    }
-	
+
 	    void updateField(string& field, const string& prompt) {
 	        string newValue;
 	        cout << "Current: " << field << endl;
@@ -622,7 +634,8 @@ class UserLogin {
 	        
 	        if (!newValue.empty()) {
 	            field = newValue;
-	            cout << "Updated successfully!" << endl;
+	            cout << "Updated successfully! Press Enter to continue." << endl;
+				cin.get();
 	        }
 	    }
 	
@@ -856,12 +869,25 @@ class Category {
 		        Ctemp = Ctemp->mainNext;
 		    }
 		    cout << "+----+-----------------------------------------+\n";
-		
 		    int choose;
-		    cout << "Enter the category ID that you want to find(99 for search): ";
+			if(type == "user"){
+		    	cout << "Enter the category ID that you want to find: ";
+			}else{
+				cout << "Select the category for product: ";
+			}
 		    cin >> choose;
-		    
 		    return choose;
+		}
+
+		string getCategoryNameById(int categoryId) {
+			int index = categoryId % HASH_SIZE;
+			Category* current = ChashTable[index];
+			while (current) {
+				if (current->id == categoryId)
+					return current->name;
+				current = current->hashNext;
+			}
+			return "Unknown";
 		}
 };
 
@@ -1031,14 +1057,16 @@ class Product {
 	    delete[] R;
 	}
     
-    static void displaySingleProduct(Product* p) {
+    static void displaySingleProduct(Product* p, Category& categoryManager) {
+		string name = truncateString(p->name, 39);
     	string desc = truncateString(p->description, 26);
+		string categoryName = truncateString(categoryManager.getCategoryNameById(p->categoryId), 16);
     	
 	    if (p) {
-	        cout << "| " << setw(2) << p->id << " | " << left << setw(39) << p->name << " | " 
+	        cout << "| " << setw(2) << p->id << " | " << left << setw(39) << name << " | " 
 			     << right << setw(6) << fixed << setprecision(2) << p->price << " | " 
-			     << setw(12) << p->categoryId << " | " << setw(8) << p->quantity << " | " 
-			     << setw(20) << desc << " |" << endl;
+			     << setw(16) << categoryName << " | " << setw(8) << p->quantity << " | " 
+			     << setw(21) << desc << " |" << endl;
 	    }
 	}
 	
@@ -1064,7 +1092,7 @@ class Product {
 	}
 	
 	//display the all product
-	void displayProductsFromStack() {
+	void displayProductsFromStack(Category& c, int type) {
 	    system("cls");
 	
 	    const int MAX = 1000;
@@ -1093,15 +1121,15 @@ class Product {
 	    cout << "+----+-----------------------------------------+--------+----------+----------+----------------------------+\n";
 	
 	    for (int i = 0; i < count; ++i) {
-	        displaySingleProduct(arr[i]);
+	        displaySingleProduct(arr[i], c);
 	    }
 	
 	    cout << "+----+-----------------------------------------+--------+----------+----------+----------------------------+\n";
-		viewProductDetailsById();
+		viewProductDetailsById(type);
 	}
     
     //display the category that user selected
-    void displayProductsByCategory(int categoryId) {
+    void displayProductsByCategory(int categoryId, Category& c, int type) {
 	    const int MAX = 1000;
 	    Product* arr[MAX];
 	    int count = 0;
@@ -1131,14 +1159,14 @@ class Product {
 	    cout << "| ID | Product Name                            | Price  | Category | Quantity | Description                |\n";
 	    cout << "+----+-----------------------------------------+--------+----------+----------+----------------------------+\n";
 	    for (int i = 0; i < count; ++i) {
-	        displaySingleProduct(arr[i]);
+	        displaySingleProduct(arr[i], c);
 	    }
 	    cout << "+----+-----------------------------------------+--------+----------+----------+----------------------------+\n";
-		viewProductDetailsById();
+		viewProductDetailsById(type);
 	}
     
     //view product details from sorted data
-    void viewProductDetailsById() {
+    void viewProductDetailsById(int type) {
 	    int pid;
 	    cout << "\nEnter a Product ID to view details (0 to go back): ";
 	    cin >> pid;
@@ -1158,11 +1186,6 @@ class Product {
 	        current = current->mainNext;
 	    }
 	
-	    if (!selected) {
-	        cout << "ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚ÂÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¦ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¾ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ Product ID not found.\n";
-	        return;
-	    }
-	
 	    while (true) {
 	        system("cls");
 	        cout << "=================== PRODUCT DETAILS ===================\n";
@@ -1172,6 +1195,12 @@ class Product {
 	        cout << "Quantity:    " << selected->quantity << endl;
 	        cout << "Description: " << selected->description << endl;
 	        cout << "=======================================================\n";
+			if(type != 1){
+				cin.ignore();
+				cout << "Press Enter to continure." << endl;
+				cin.get();
+				return;
+			}
 	        cout << "1. Add to cart\n";
 	        cout << "0. Back\n";
 	        cout << "Choice: ";
@@ -1364,7 +1393,7 @@ class Product {
 	            cout << "+----+-----------------------------------------+--------+----------+----------+----------------------------+\n";
 	            
 	            for(int i = 0; i < searchResultCount; i++) {
-	                displaySingleProduct(searchResults[i]);
+	                displaySingleProduct(searchResults[i], c);
 	            }
 	            
 	            cout << "+----+-----------------------------------------+--------+----------+----------+----------------------------+\n";
@@ -2009,13 +2038,13 @@ class UserModule {
                         p.loadProducts();
                     
                         if (selectedCategory == 0) {
-                            p.displayProductsFromStack();
+                            p.displayProductsFromStack(c, type);
                         } 
                         else if (selectedCategory == 99) {
                             p.searchProduct();
                         } 
                         else {
-                            p.displayProductsByCategory(selectedCategory);
+                            p.displayProductsByCategory(selectedCategory, c, type);
                         }
                         break;
                     }
@@ -2083,9 +2112,10 @@ class ProductManagement : public AdminOperation{
 private:
     Product* product;
     Category* category;
+    int type;
     
 public:
-    ProductManagement(Product* p, Category* c) : product(p), category(c) {}
+    ProductManagement(Product* p, Category* c, int t) : product(p), category(c), type(t) {}
     
     void execute() override {
         product->loadProducts();
@@ -2105,6 +2135,7 @@ public:
                     case 2: editProduct(); break;
                     case 3: deleteProduct(); break;
                     case 4: searchProduct(); break;
+					case 5: product->displayProductsFromStack(*category, type);
                     case 0: cout << "Returning to main menu...\n"; break;
                     default: throw invalid_argument("Invalid choice!");
                 }
@@ -2117,7 +2148,6 @@ public:
         } while(choice != 0);
     }
 
-private:
     void displayProductMenu() {
         cout << "====================================" << endl;
         cout << "||      PRODUCT MANAGEMENT        ||" << endl;
@@ -2126,6 +2156,7 @@ private:
         cout << "2. Edit Product" << endl;
         cout << "3. Delete Product" << endl;
         cout << "4. Search Product" << endl;
+		cout << "5. Display All Product" << endl;
         cout << "0. Back to Main Menu" << endl;
         cout << "====================================" << endl;
     }
@@ -2186,14 +2217,15 @@ private:
     
     void editProduct() {
     	cout << "\n--- Current Products ---" << endl;
-    	cout << "| " << setw(2) << "id" << " | " << left << setw(39) << "name" << " | " 
-			     << setw(6) << "price" << " | " 
-			     << setw(12) << "categoryId" << " | " << setw(8) << "quantity" << " | " 
-			     << setw(26) << "description" << " |" << endl;
+    	cout << "| " << setw(2) << "ID" << " | " << left << setw(39) << "Name" << " | " 
+			     << setw(6) << "Price" << " | " 
+			     << setw(16) << "Category Name" << " | " << setw(8) << "Quantity" << " | " 
+			     << setw(26) << "Description" << " |" << endl;
 		cout << string(114, '-') << endl;
 	    product->loadProducts();
+		category->loadCategory();
 	    product->productStack.Functraverse([&](Product* p) {
-	        Product::displaySingleProduct(p);
+	        Product::displaySingleProduct(p, *category);
 	    });
         cout << "\n--- Edit Product ---" << endl;
         cout << "Enter Product ID to edit: ";
@@ -2214,7 +2246,7 @@ private:
         if(!existing) throw runtime_error("Product not found!");
         
         cout << "\nCurrent Product Details:" << endl;
-        Product::displaySingleProduct(existing);
+        Product::displaySingleProduct(existing, *category);
         
         Product updated = *existing;
         
@@ -2310,14 +2342,15 @@ private:
     
     void deleteProduct() {
     	cout << "\n--- Current Products ---" << endl;
-    	cout << "| " << setw(2) << "id" << " | " << left << setw(39) << "name" << " | " 
-			     << setw(6) << "price" << " | " 
-			     << setw(12) << "categoryId" << " | " << setw(8) << "quantity" << " | " 
-			     << setw(26) << "description" << " |" << endl;
+    	cout << "| " << setw(2) << "ID" << " | " << left << setw(39) << "Name" << " | " 
+			     << setw(6) << "Price" << " | " 
+			     << setw(16) << "Category Name" << " | " << setw(8) << "Quantity" << " | " 
+			     << setw(26) << "Description" << " |" << endl;
 		cout << string(114, '-') << endl;
 	    product->loadProducts();
+		category->loadCategory();
 	    product->productStack.Functraverse([&](Product* p) {
-	        Product::displaySingleProduct(p);
+	        Product::displaySingleProduct(p, *category);
 	    });
         cout << "\n--- Delete Product ---" << endl;
         cout << "Enter Product ID to delete: ";
@@ -2338,7 +2371,7 @@ private:
         if(!toDelete) throw runtime_error("Product not found!");
         
         cout << "\nProduct to Delete:" << endl;
-        Product::displaySingleProduct(toDelete);
+        Product::displaySingleProduct(toDelete, *category);
         
         cout << "\nARE YOU SURE YOU WANT TO DELETE THIS PRODUCT? (Y/N): ";
         char confirm;
@@ -3201,21 +3234,21 @@ public:
         orderFile.close();
 
         // Display report
-        cout << "\nMonthly Report for " << inputMonth << "\n";
-        cout << "+------------+--------------+-------------+\n";
-        cout << "| Date       | Total Sales  | # of Orders |\n";
-        cout << "+------------+--------------+-------------+\n";
+        cout << "\nMonthly Report for " << inputMonth << endl;
+        cout << "+------------+--------------+-----------------+" << endl;
+        cout << "| Date       | Total Sales  |  No of Orders   |" << endl;
+        cout << "+------------+--------------+-----------------+" << endl;
         
         for (int i = 0; i < dailyDataCount; i++) {
             cout << "| " << setw(10) << dailyData[i].date << " | RM" 
                  << setw(10) << fixed << setprecision(2) << dailyData[i].totalSales 
-                 << " | " << setw(11) << dailyData[i].orderCount << " |\n";
+                 << " | " << setw(15) << dailyData[i].orderCount << " |\n";
         }
         
-        cout << "+------------+--------------+-------------+\n";
+        cout << "+------------+--------------+-----------------+" << endl;
         cout << "| Monthly Total: RM" << setw(10) << monthlyTotal 
-             << " | Orders: " << setw(5) << uniqueOrderCount << " |\n";
-        cout << "+-----------------------------------------+\n";
+             << " | Orders: " << setw(5) << uniqueOrderCount << " |" << endl;
+        cout << "+---------------------------------------------+" << endl;
     }
 
     void generateAnnualReport() {
@@ -3240,7 +3273,7 @@ public:
         string line;
         getline(orderFile, line); // Skip header
 
-        SalesData monthlyData[12]; // 12 months maximum
+        SalesData monthlyData[12];
         int monthlyDataCount = 0;
         double annualTotal = 0;
         int uniqueOrderIds[MAX_UNIQUE_ORDERS];
@@ -3292,21 +3325,21 @@ public:
         orderFile.close();
 
         // Display report
-        cout << "\nAnnual Report for " << inputYear << "\n";
-        cout << "+---------+--------------+-------------+\n";
-        cout << "| Month   | Total Sales  | # of Orders |\n";
-        cout << "+---------+--------------+-------------+\n";
+        cout << "\nAnnual Report for " << inputYear << endl;
+        cout << "+---------+--------------+----------------------+" << endl;
+        cout << "| Month   | Total Sales  |     No of Orders     |" << endl;
+        cout << "+---------+--------------+----------------------+" << endl;
         
         for (int i = 0; i < monthlyDataCount; i++) {
             cout << "| " << setw(7) << monthlyData[i].date << " | RM" 
                  << setw(10) << fixed << setprecision(2) << monthlyData[i].totalSales 
-                 << " | " << setw(11) << monthlyData[i].orderCount << " |\n";
+                 << " | " << setw(20) << monthlyData[i].orderCount << " |" << endl;
         }
         
-        cout << "+---------+--------------+-------------+\n";
+        cout << "+---------+--------------+----------------------+" << endl;
         cout << "| Annual Total: RM" << setw(10) << annualTotal 
-             << " | Orders: " << setw(5) << uniqueOrderCount << " |\n";
-        cout << "+--------------------------------------+\n";
+             << " | Orders: " << setw(9) << uniqueOrderCount << "|" << endl;
+        cout << "+-----------------------------------------------+" << endl;
     }
 };
 
@@ -3344,7 +3377,7 @@ class AdminModule {
 	                
 	                switch(choice) {
 	                    case 1: 
-	                        operation = new ProductManagement(&p, &c);
+	                        operation = new ProductManagement(&p, &c, admintype);
 	                        operation->execute();
 	                        delete operation;
 	                        break;
@@ -3428,6 +3461,8 @@ class AdminModule {
 	            switch(choice) {
 	                case 1:
 	                    viewAllStaff();
+						cout << "Press Enter to continue...";
+						cin.get();
 	                    break;
 	                case 2:
 	                    addNewStaff();
@@ -3474,8 +3509,6 @@ class AdminModule {
 			file.close();
 
 			cout << "+----+------------------+---------------------+----------------+" << endl;
-			cout << "Press Enter to continue...";
-			cin.get();
 		}
 
 		void addNewStaff() {

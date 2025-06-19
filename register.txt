@@ -1,10 +1,3 @@
 ID   |Name           |password       |home address                                                |email address                 |Phone Number
 1|yuthee|1234|1, taman bukit beruang|yuthee@gmail.com|+601110841128
-3    |               |123            |ng                                                          |tang@gmaul.com                |+60+601145874587
-4    |tang           |123            |245, taman khong                                            |khong@gmail.com               |+60+60112541254
-5    |chaaikhong     |123            |997, taman aman utama 45400 sekinchan selangor              |aikhongcha@gmail.com          |+601139859858
-6    |az             |123            |233                                                         |123@gmail.com                 |+60123456789
-7    |Tang Yut Hee   |123456123456   |1,jalan biru,taman abc,84000.batu pahat.johor               |yuthee1128@gmail.com          |+601234567
-8    |1              |123            |45213698, taman                                             |12@gmail.com                  |+60123456789
-9    |testing        |123            |k                                                           |123@.com                      |+60123
-10|yuthee|123456|89, taman|yuthee@gmail.com|+601192842773
+2|aikhong|aikhong123456|20,jalan ixora 75450 melaka|aikhongcha@gmail.com|+601136981819

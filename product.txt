@@ -1,34 +1,35 @@
 id|name|price|categoryId|quantity|description
-1|Pedigree Adult Dry Dog Food      |29.45|1|18|Balanced dry food for adult dogs.
-2|Probalance Beef Dog Food         |31.90|1|83|Rich in beef protein for strength and immunity.
-3|IQ Dog Chicken Dog food          |31.50|1|84|Tasty chicken formula, supports digestion.
-4|Back2Nature                      |200.00|1|92|Natural and organic food for sensitive dogs.
-5|Royal Canin Pomeranian Adult     |20.00|1|78|Tailored nutrition for Pomeranian adults.
-6|Monge Fresh Wet Food             |4.90|2|90|Fresh ingredients in a flavorful wet meal.
-7|Pedigree Wet Pouch               |2.90|2|99|Convenient wet food pouch, full of nutrients.
-8|Pedigree Dog Can Food            |2.90|2|98|Juicy canned food with high palatability.
-9|Cesar Can Wet Dog Food           |1.90|2|99|Gourmet wet food for small breed dogs.
-10|Probalance Selection Dog Food   |6.90|2|99|Premium blend for complete nutrition.
-11|Raw Chicken Breast (100g)       |10.00|3|99|Fresh raw chicken breast, high in protein.
-12|Raw Beef (100g)                 |15.00|3|99|Quality raw beef, rich in iron and energy.
-13|Raw Duck Breast (100g)          |10.90|3|90|Nutritious duck breast with unique flavor.
-14|Beef Offal (100g)               |15.90|3|89|Mixed beef organs, full of vital nutrients.
-15|Chicken heart (100g)            |9.90|3|90|Rich in iron, supports healthy development.
-16|Beef Bone                       |15.90|3|80|Calcium-rich beef bone for dental health.
-17|Dog Chewing Toy                 |5.99|4|90|Chew toy that helps clean teeth and prevent boredom.
-18|Dog Bell Bone                   |5.99|4|90|Bone-shaped toy with bell to attract attention.
-19|Large Bone Toy                  |7.99|4|90|Durable toy for medium to large dogs.
-20|Rubber Bouncy Bitting Ball      |3.99|4|90|Bouncy rubber ball for interactive play.
-21|Soft Doll Toys                  |7.99|4|90|Plush toy to comfort and entertain dogs.
-22|black dog king                  |100.00|1|90|Premium dog food for large breeds, packed with nutrients.
-23|Royal Canin Mini Puppy 4kg Dry Dog Food|110.5|4|100|Growth is an essential stage in your dog's life: it is the time of big changes, discoveries and new encounters.
-24|Carnilove Dog 12kg Adult Salmon Dry Dog Food|250|4|100|Salmon is a good source of highly digestible proteins. It's easy to digest and has anti-inflammatory properties.
-25|Brit Care Animals Hamster 300g Dry Food|25.5|6|100|Super Premium Complete Food for Hamsters. Safe nutrition - contains essential vitamins and nutrients. Contains linseed - a source of omega-3 unsaturated fatty acids for shiny hair.
-26|Brit Premium Wet Cat Food 85g|3.5|1|150|brit Premium wet Cat Food
-27|Brit Care Cat 400g Grain Free Hair Care Healthy & Shiny Coat Dry Cat Food|20.5|3|160|Hypoallergenic grain-free formula. For adult cats with demanding coat care.
-28|Brit Care Dog Pate & Meat Turkey Canned 400g Wet Dog Food|10.5|3|180|Give your dog a tantalizing treat with Brit Care Dog Pate & Meat Turkey Canned 400g Wet Dog Food - the ultimate feast they'll love sinking their teeth into!
-29|Amanova Cat 70g Adult Salmon & Quinoa Low Grain Dry Cat Food Trial Pack|6.5|4|90|The fatty acids and zinc will keep your cat skin healthy and vigorous, as well as a strong and shiny coat.
+33|Mowchi Frosticles 35g Nutritional Beef Freeze-dried Cat And Dog Snack|59.90|4|180|Freeze-drying techonology removes the water and retains 100% original meat
+32|Amelisa Rawly Bites Mini 50g Chicken Freeze Dried Treat|20.50|4|108|weekly fresh product and 1.2mm cube best for chew
+31|Rich.co 80g Creameaty With Goatmilk & Probiotics|10.90|2|90|Fresh Creameaty with Goatmilk & Probiotics
 30|Neu Zea Organic Milk Probiotic & Prebiotics 250g|35.05|2|80|Neu Zea is a milk replacer for orphanage puppies and kittens and also for those that don't get sufficient milk supply from their mother.
-31|Rich.co 80g Creameaty With Goatmilk & Probiotics|10.9|2|90|Fresh Creameaty with Goatmilk & Probiotics
-32|Amelisa Rawly Bites Mini 50g Chicken Freeze Dried Treat|20.5|4|108|weekly fresh product and 1.2mm cube best for chew
-33|Mowchi Frosticles 35g Nutritional Beef Freeze-dried Cat And Dog Snack|59.9|4|180|Freeze-drying techonology removes the water and retains 100% original meat
+29|Amanova Cat 70g Adult Salmon & Quinoa Low Grain Dry Cat Food Trial Pack|6.50|4|90|The fatty acids and zinc will keep your cat skin healthy and vigorous, as well as a strong and shiny coat.
+28|Brit Care Dog Pate & Meat Turkey Canned 400g Wet Dog Food|10.50|3|180|Give your dog a tantalizing treat with Brit Care Dog Pate & Meat Turkey Canned 400g Wet Dog Food - the ultimate feast they'll love sinking their teeth into!
+27|Brit Care Cat 400g Grain Free Hair Care Healthy & Shiny Coat Dry Cat Food|20.50|3|160|Hypoallergenic grain-free formula. For adult cats with demanding coat care.
+26|Brit Premium Wet Cat Food 85g|3.50|1|150|brit Premium wet Cat Food
+25|Brit Care Animals Hamster 300g Dry Food|25.50|6|100|Super Premium Complete Food for Hamsters. Safe nutrition - contains essential vitamins and nutrients. Contains linseed - a source of omega-3 unsaturated fatty acids for shiny hair.
+24|Carnilove Dog 12kg Adult Salmon Dry Dog Food|250.00|4|100|Salmon is a good source of highly digestible proteins. It's easy to digest and has anti-inflammatory properties.
+23|Royal Canin Mini Puppy 4kg Dry Dog Food|110.50|4|100|Growth is an essential stage in your dog's life: it is the time of big changes, discoveries and new encounters.
+22|black dog king                  |100.00|1|90|Premium dog food for large breeds, packed with nutrients.
+21|Soft Doll Toys                  |7.99|4|90|Plush toy to comfort and entertain dogs.
+20|Rubber Bouncy Bitting Ball      |3.99|4|90|Bouncy rubber ball for interactive play.
+19|Large Bone Toy                  |7.99|4|90|Durable toy for medium to large dogs.
+18|Dog Bell Bone                   |5.99|4|90|Bone-shaped toy with bell to attract attention.
+17|Dog Chewing Toy                 |5.99|4|90|Chew toy that helps clean teeth and prevent boredom.
+16|Beef Bone                       |15.90|3|80|Calcium-rich beef bone for dental health.
+15|Chicken heart (100g)            |9.90|3|90|Rich in iron, supports healthy development.
+14|Beef Offal (100g)               |15.90|3|89|Mixed beef organs, full of vital nutrients.
+13|Raw Duck Breast (100g)          |10.90|3|90|Nutritious duck breast with unique flavor.
+12|Raw Beef (100g)                 |15.00|3|99|Quality raw beef, rich in iron and energy.
+11|Raw Chicken Breast (100g)       |10.00|3|99|Fresh raw chicken breast, high in protein.
+10|Probalance Selection Dog Food   |6.90|2|99|Premium blend for complete nutrition.
+9|Cesar Can Wet Dog Food           |1.90|2|99|Gourmet wet food for small breed dogs.
+8|Pedigree Dog Can Food            |2.90|2|98|Juicy canned food with high palatability.
+7|Pedigree Wet Pouch               |2.90|2|99|Convenient wet food pouch, full of nutrients.
+6|Monge Fresh Wet Food             |4.90|2|90|Fresh ingredients in a flavorful wet meal.
+5|Royal Canin Pomeranian Adult     |20.00|1|78|Tailored nutrition for Pomeranian adults.
+4|Back2Nature                      |200.00|1|92|Natural and organic food for sensitive dogs.
+3|IQ Dog Chicken Dog food          |31.50|1|84|Tasty chicken formula, supports digestion.
+2|Probalance Beef Dog Food         |31.90|1|83|Rich in beef protein for strength and immunity.
+1|Pedigree Adult Dry Dog Food      |29.45|1|17|Balanced dry food for adult dogs.
+34|Instinct Dog Freeze-dried Raw Boost Mixers 21g|20.5|3|180|Top your kibble with freeze-dried raw for natural fatty acids - Omega 3 & 6 - to help maintain a healthy skin & coat
